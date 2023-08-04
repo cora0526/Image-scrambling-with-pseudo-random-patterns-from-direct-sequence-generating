@@ -1,3 +1,5 @@
+//用window跑shift+ctrl+B編譯
+//跑./testing1.exe
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
