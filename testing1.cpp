@@ -1,5 +1,7 @@
 //用window跑shift+ctrl+B編譯
 //跑./testing1.exe
+//如果要在window的VS code跑還需要下載MinGW
+//且加入環境變數"C:\MinGW\bin"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -67,7 +69,7 @@ int lfsr (int intial, int s, int* set){
     int c1=s;
     int setstop=0;
     int j=1;
-    
+
     for (int t=0;t<32;t++){
         c=set[t];
         if (c==0)
