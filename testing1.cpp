@@ -46,7 +46,7 @@ int main (void){
         }
         
     }
-    arraprint(&matrix[0][0]);
+    // arraprint(&matrix[0][0]);
     int errorspot = 0;
     double nearest_dis = 0;
     int nearbyerr = 0;
@@ -55,12 +55,14 @@ int main (void){
     {
         errorspot=finderror(&matrix[0][0],errorspot);
         // printf("errorspot:%d\n",errorspot);
+        printf("errorspot=%d ",errorspot);
         if (errorspot == -1)
         {
             // printf("error spot:%d error finding stop\n",errorspot);
             break;
         }
         nearest_dis = findnearerr(&matrix[0][0], errorspot, 1);
+        printf("nearest_dis=%f\n",nearest_dis);
         if (nearest_dis==1)
         {nearbyerr=nearbyerr+1;}
         avrnearest_dis=nearest_dis+avrnearest_dis;
