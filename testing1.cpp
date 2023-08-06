@@ -21,6 +21,9 @@ void arraprint (char*);
 int stagedefine (void);
 int lfsr (int,int,int*);
 void fillerr (char*,int);
+int finderror (char*,int);
+double findnearerr(char*,int,int);
+
 int main (void){
     int settingmatrix[32]={7,3,0,0,0,0,0,0,0,0,
                            0,0,0,0,0,0,0,0,0,0,
@@ -44,8 +47,147 @@ int main (void){
         
     }
     arraprint(&matrix[0][0]);
-    
+    int errorspot = 0;
+    double nearest_dis = 0;
+    while(errorspot<SIZEX*SIZEY)
+    {
+        errorspot=finderror(&matrix[0][0],errorspot);
+        printf("errorspot:%d\n",errorspot);
+        if (errorspot == -1)
+        {
+            // printf("error spot:%d error finding stop\n",errorspot);
+            break;
+        }
+        errorspot = errorspot + 1;
+    }
+    errorspot = 94 ; 
+    nearest_dis = findnearerr(&matrix[0][0], errorspot, 1);
+    printf("near_dis:%f",nearest_dis);
     return 0;
+}
+
+double findnearerr(char* matrix,int ord,int count)
+{
+    int x = ord % SIZEX;
+    int y = ord / SIZEX;
+    int xa = x - count;
+    int ya = y - count;
+    int pos = 0;
+    double dis[2] = {0};
+    printf("x:%d,y:%d,ax:%d,ay:%d,count:%d\n",x,y,xa,ya,count);
+    dis[0] = (2 * count + 1) * sqrt(2);
+    for (int i1 = 1; i1 <= count * 2; i1++)
+    {
+        ya = ya + 1;
+        printf("x:%d,y:%d,ax:%d,ay:%d\n",x,y,xa,ya);
+        if (ya >= SIZEY || ya < 0 || xa >= SIZEX || xa < 0)
+        {
+            continue;
+        }
+        pos = xa + ya * SIZEX;
+        printf("pos=%d\n",pos);
+        if (matrix[pos] == 1)
+        {
+            dis[1] = sqrt((x - xa) * (x - xa) + (y - ya) * (y - ya));
+            if (dis[1] < dis[0])
+            {
+                dis[0] = dis[1];
+            }
+        }
+        else if (matrix[pos] == 0)
+        {
+            continue;
+        }
+    }
+    for (int i2 = 1; i2 <= count * 2; i2++)
+    {
+        xa = xa + 1;
+        printf("x:%d,y:%d,ax:%d,ay:%d\n",x,y,xa,ya);
+        if (ya >= SIZEY || ya < 0 || xa >= SIZEX || xa < 0)
+        {
+            continue;
+        }
+        pos = xa + ya * SIZEX;
+        printf("pos=%d\n",pos);
+        if (matrix[pos] == 1)
+        {
+            dis[1] = sqrt((x - xa) * (x - xa) + (y - ya) * (y - ya));
+            if (dis[1] < dis[0])
+            {
+                dis[0] = dis[1];
+            }
+        }
+        else if (matrix[pos] == 0)
+        {
+            continue;
+        }
+    }
+    for (int i3 = 1; i3 <= count * 2; i3++)
+    {
+        printf("x:%d,y:%d,ax:%d,ay:%d\n",x,y,xa,ya);
+        ya = ya - 1;
+        if (ya >= SIZEY || ya < 0 || xa >= SIZEX || xa < 0)
+        {
+            continue;
+        }
+        pos = xa + ya * SIZEX;
+        printf("pos=%d\n",pos);
+        if (matrix[pos] == 1)
+        {
+            dis[1] = sqrt((x - xa) * (x - xa) + (y - ya) * (y - ya));
+            if (dis[1] < dis[0])
+            {
+                dis[0] = dis[1];
+            }
+        }
+        else if (matrix[pos] == 0)
+        {
+            continue;
+        }
+    }
+    for (int i4 = 1; i4 <= count * 2; i4++)
+    {
+        printf("x:%d,y:%d,ax:%d,ay:%d\n",x,y,xa,ya);
+        xa = xa - 1;
+        if (ya >= SIZEY || ya < 0 || xa >= SIZEX || xa < 0)
+        {
+            continue;
+        }
+        pos = xa + ya * SIZEX;
+        printf("pos=%d\n",pos);
+        if (matrix[pos] == 1)
+        {
+            dis[1] = sqrt((x - xa) * (x - xa) + (y - ya) * (y - ya));
+            if (dis[1] < dis[0])
+            {
+                dis[0] = dis[1];
+            }
+        }
+        else if (matrix[pos] == 0)
+        {
+            continue;
+        }
+    }
+    if (dis[1] == 0)
+    {
+        return findnearerr(matrix, ord, count + 1);
+    }
+    return dis[0];
+}
+
+
+int finderror (char* mat,int ord){
+    int err;
+    int i;
+    for (i=ord;i<SIZEX*SIZEY;i++)
+    {
+        if (mat[i]==1)
+        {
+            err = i;
+            return err;
+        }
+    }
+    return -1;
 }
 
 void fillerr (char* mat,int s){
