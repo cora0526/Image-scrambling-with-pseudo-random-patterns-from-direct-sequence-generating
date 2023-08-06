@@ -56,8 +56,9 @@ void fillerr (char* mat,int s){
 int lfsr (int intial, int s, int* set){
     //設定x^7 + x^3 + 1
     int mat[32]={0};
-
+    //因為最多就32階
     int i,i1,i2,i3,i4,i5,i6,i7,i8,i9,i10=0;
+    int tem = pow(2,s)-1;
     i=1;//7
     if ((i&intial)==1)
     {
@@ -67,10 +68,9 @@ int lfsr (int intial, int s, int* set){
 
     int c=0;
     int c1=s;
-    int setstop=0;
+    int setstop=1;
     int j=1;
-
-    for (int t=0;t<32;t++){
+    for (int t=1;t<32;t++){
         c=set[t];
         if (c==0)
         {
@@ -98,11 +98,10 @@ int lfsr (int intial, int s, int* set){
     for (int ii=1;ii<setstop;ii++){
         mat[0]=mat[ii]^mat[0];
     }
-    i<<=(s-1);
+    mat[0]<<=(s-1);
     intial>>=1;
     // intial+=i;
     intial+=mat[0];
-    int tem = pow(2,s)-1;
     intial&=tem;
     // printf("intial:%d\n",intial);
     return intial;
