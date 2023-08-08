@@ -35,8 +35,6 @@ int main (){
     printf("intial=%d\n",intial); 
     for (int i=0;i<SIZE*SIZE;i++)
     {
-        
-        
         intial=lfsr(intial);
         
         if (i>x&&i<ERRORSIZE+x)

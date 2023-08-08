@@ -7,14 +7,12 @@
 #include <time.h>
 #include <math.h>
 #include <unistd.h>
-//x^7 + x^3 + 1
-//初始值:0b1110010=114
-#define SIZEX 10
-#define SIZEY 12
-#define SIZE 120
-#define ERROR 0.05
-#define ERRORSIZE 6
-#define INITIAL 0b1110010
+#define SIZEX 600
+#define SIZEY 400
+#define SIZE 240000
+#define ERROR 0.25
+#define ERRORSIZE 60000
+#define INITIAL 0b111001000000000000
 
 
 void arraprint (char*);
@@ -25,52 +23,67 @@ int finderror (char*,int);
 double findnearerr(char*,int,int);
 
 int main (void){
-    int settingmatrix[32]={7,3,0,0,0,0,0,0,0,0,
+    int x=0;
+    for(int t=0;t<50;t++)
+    {
+        int settingmatrix[32]={18,7,0,0,0,0,0,0,0,0,
                            0,0,0,0,0,0,0,0,0,0,
                            0,0,0,0,0,0,0,0,0,0,0,0};
-    char matrix [SIZEY][SIZEX]={0};
-    int stage = stagedefine();
-    int a = lfsr(INITIAL,stage,&settingmatrix[0]);
-    for (int i=0;i<ERRORSIZE;i++)
-    {   
-        if (a>=(SIZEX*SIZEY)){
-            printf("i=%d %d pass\n",i,a);
-            a = lfsr(a,stage,&settingmatrix[0]);
-            i=i-1;
-            continue;
-        }
-        else {
-            fillerr(&matrix[0][0],a);
-            printf("i=%d %d\n",i,a);
-            a = lfsr(a,stage,&settingmatrix[0]);
-        }
+        char matrix [SIZEY][SIZEX]={0};
+        int stage = stagedefine();
+        int temp = INITIAL+t;
+        int a = lfsr(temp,stage,&settingmatrix[0]);
+        for (int i=1;i<ERRORSIZE;i++)
+        {   
+            if (a>=(SIZEX*SIZEY)){
+                // printf("i=%d %d pass\n",i,a);
+                a = lfsr(a,stage,&settingmatrix[0]);
+                i=i-1;
+                continue;
+            }
+            else {
+                fillerr(&matrix[0][0],a);
+                // printf("i=%d %d\n",i,a);
+                a = lfsr(a,stage,&settingmatrix[0]);
+                
+            }
         
-    }
-    // arraprint(&matrix[0][0]);
-    int errorspot = 0;
-    double nearest_dis = 0;
-    int nearbyerr = 0;
-    double avrnearest_dis,neighborratio = 0;
-    while(errorspot<SIZEX*SIZEY)
-    {
-        errorspot=finderror(&matrix[0][0],errorspot);
-        // printf("errorspot:%d\n",errorspot);
-        printf("errorspot=%d ",errorspot);
-        if (errorspot == -1)
-        {
-            // printf("error spot:%d error finding stop\n",errorspot);
-            break;
         }
-        nearest_dis = findnearerr(&matrix[0][0], errorspot, 1);
-        printf("nearest_dis=%f\n",nearest_dis);
-        if (nearest_dis==1)
-        {nearbyerr=nearbyerr+1;}
-        avrnearest_dis=nearest_dis+avrnearest_dis;
-        errorspot = errorspot + 1;
+        // arraprint(&matrix[0][0]);
+        int errorspot = 0;
+        double nearest_dis = 0;
+        double nearbyerr = 0;
+        double avrnearest_dis = 0;
+        double neighborratio = 0;
+        while(errorspot<SIZEX*SIZEY)
+        {
+            errorspot=finderror(&matrix[0][0],errorspot);
+            // printf("errorspot:%d\n",errorspot);
+            // printf("errorspot=%d ",errorspot);
+            if (errorspot == -1)
+            {
+                // printf("error spot:%d error finding stop\n",errorspot);
+                break;
+            }
+            nearest_dis = findnearerr(&matrix[0][0], errorspot, 1);
+            
+            if (nearest_dis==1.0)
+            {
+                nearbyerr=nearbyerr+1;
+            }
+            avrnearest_dis=nearest_dis+avrnearest_dis;
+            errorspot = errorspot + 1;
+        }
+        avrnearest_dis = avrnearest_dis/ERRORSIZE;
+        neighborratio = (nearbyerr / ERRORSIZE);
+        
+        printf("neighborratio=%f  avrnearest_dis=%f\n",neighborratio,avrnearest_dis);
+        // arraprint(&matrix[0][0]);
+        FILE *fp = NULL ;
+        fp = fopen("4*6Dloss05m-seq.csv","a");
+        fprintf(fp,"%9f\t%9f\n",neighborratio,avrnearest_dis);
     }
-    avrnearest_dis= avrnearest_dis/ERRORSIZE;
-    neighborratio=nearbyerr/ERRORSIZE;
-    printf("neighborratio=%f\navrnearest_dis=%f\n",neighborratio,avrnearest_dis);
+    fclose(fp)
     return 0;
 }
 
