@@ -7,12 +7,12 @@
 #include <time.h>
 #include <math.h>
 #include <unistd.h>
-#define SIZEX 600
-#define SIZEY 400
-#define SIZE 240000
-#define ERROR 0.25
-#define ERRORSIZE 60000
-#define INITIAL 0b111001000000000000
+#define SIZEX 1024
+#define SIZEY 768
+#define SIZE 786432
+#define ERROR 0.2
+#define ERRORSIZE 157286
+#define INITIAL 0b11100100000000000000
 
 
 void arraprint (char*);
@@ -24,7 +24,7 @@ double findnearerr(char*,int,int);
 
 int main (void){
     int x=0;
-    for(int t=0;t<50;t++)
+    for(int t=0;t<950;t++)
     {
         int settingmatrix[32]={18,7,0,0,0,0,0,0,0,0,
                            0,0,0,0,0,0,0,0,0,0,
@@ -80,10 +80,10 @@ int main (void){
         printf("neighborratio=%f  avrnearest_dis=%f\n",neighborratio,avrnearest_dis);
         // arraprint(&matrix[0][0]);
         FILE *fp = NULL ;
-        fp = fopen("4*6Dloss05m-seq.csv","a");
+        fp = fopen("5_7Dloss20m-seq.csv","a");
         fprintf(fp,"%9f\t%9f\n",neighborratio,avrnearest_dis);
+        fclose(fp);
     }
-    fclose(fp)
     return 0;
 }
 
