@@ -15,4 +15,4 @@ for x in df['1048577']:
 
 img_path = "R.jpg"
 img = cv2.imread(img_path)
-print(type(img))
+print(img[0][1])
